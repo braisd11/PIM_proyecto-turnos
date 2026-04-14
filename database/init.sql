@@ -1,0 +1,46 @@
+CREATE TABLE IF NOT EXISTS EMPLEADO (
+    id_empleado INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    dni TEXT NOT NULL UNIQUE,
+    telefono TEXT,
+    usuario TEXT NOT NULL UNIQUE,
+    contrasena TEXT NOT NULL,
+    rol TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS SOLICITUD (
+    id_solicitud INTEGER PRIMARY KEY AUTOINCREMENT,
+    tipo TEXT NOT NULL,
+    motivo TEXT,
+    estado TEXT NOT NULL,
+    fecha_solicitud TEXT NOT NULL,
+    id_empleado INTEGER NOT NULL,
+    FOREIGN KEY (id_empleado) REFERENCES EMPLEADO(id_empleado)
+);
+
+CREATE TABLE IF NOT EXISTS VACACION (
+    id_vacacion INTEGER PRIMARY KEY AUTOINCREMENT,
+    fecha_inicio TEXT NOT NULL,
+    fecha_fin TEXT NOT NULL,
+    id_empleado INTEGER NOT NULL,
+    FOREIGN KEY (id_empleado) REFERENCES EMPLEADO(id_empleado)
+);
+
+CREATE TABLE IF NOT EXISTS CUADRANTE (
+    id_cuadrante INTEGER PRIMARY KEY AUTOINCREMENT,
+    mes INTEGER NOT NULL,
+    anio INTEGER NOT NULL,
+    dias_mes INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS TURNO (
+    id_turno INTEGER PRIMARY KEY AUTOINCREMENT,
+    hora_inicio TEXT NOT NULL,
+    hora_fin TEXT NOT NULL,
+    dia_mes INTEGER NOT NULL,
+    id_empleado INTEGER NOT NULL,
+    id_cuadrante INTEGER NOT NULL,
+    FOREIGN KEY (id_empleado) REFERENCES EMPLEADO(id_empleado),
+    FOREIGN KEY (id_cuadrante) REFERENCES CUADRANTE(id_cuadrante)
+);
