@@ -10,7 +10,7 @@ if(!isset($_SESSION['usuario'])){
 <head>
   <meta charset="UTF-8">
   <title>App Turnos</title>
-  <link rel="stylesheet" href="/pim_prueba/css/styles.css">
+  <link rel="stylesheet" href="/PIM_proyecto-turnos/propuesta_nayra/css/styles.css">
 </head>
 <body>
 

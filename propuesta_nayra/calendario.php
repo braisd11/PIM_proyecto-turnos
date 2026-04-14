@@ -5,7 +5,7 @@
   <title>Calendario</title>
 
   <link rel="stylesheet" href="/pim_prueba/css/styles.css">
-  <script src="/pim_prueba/js/daypilot-all.min.js"></script>
+  <script src="/PIM_proyecto-turnos/propuesta_nayra/js/daypilot-all.min.js"></script>
 </head>
 
 <body>

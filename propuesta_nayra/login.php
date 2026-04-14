@@ -20,7 +20,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <head>
 <meta charset="UTF-8">
 <title>Login</title>
-<link rel="stylesheet" href="/pim_prueba/css/styles.css">
+<link rel="stylesheet" href="/PIM_proyecto-turnos/propuesta_nayra/css/styles.css">
 </head>
 <body>
 <div class="card center">
