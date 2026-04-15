@@ -87,6 +87,8 @@ $fotoUrl = $foto ? 'uploads/' . htmlspecialchars($foto) : '';
 
           <button class="primary" type="submit">Guardar cambios</button>
         </form>
+        <br/><br/><hr/>
+        <a href="mis_solicitudes.php">Mis solicitudes</a>
       </div>
     </div>
   </div>

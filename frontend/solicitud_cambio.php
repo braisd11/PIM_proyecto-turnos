@@ -1,4 +1,3 @@
-
 <!-- ================= Menu ================= -->
 <?php include 'layout.php'; ?>
 
@@ -39,23 +38,6 @@
         <textarea id="observaciones_turno" name="observaciones_turno" placeholder="Explica aquí tu solicitud..."></textarea>
       </div>
       <button class="primary">Enviar cambio de turno</button>
-    </section>
-
-    <section class="request-section">
-      <h3>Vacaciones</h3>
-      <div class="form-group">
-        <label for="vacaciones_inicio">Inicio</label>
-        <input type="date" id="vacaciones_inicio" name="vacaciones_inicio">
-      </div>
-      <div class="form-group">
-        <label for="vacaciones_fin">Fin</label>
-        <input type="date" id="vacaciones_fin" name="vacaciones_fin">
-      </div>
-      <div class="form-group">
-        <label for="observaciones_vacaciones">Observaciones</label>
-        <textarea id="observaciones_vacaciones" name="observaciones_vacaciones" placeholder="Puedes explicar el motivo o los días preferidos..."></textarea>
-      </div>
-      <button class="primary">Solicitar vacaciones</button>
     </section>
   </div>
 </main>

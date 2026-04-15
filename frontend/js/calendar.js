@@ -1,5 +1,10 @@
+document.addEventListener("DOMContentLoaded", function () {
+  updateCalendar(DayPilot.Date.today());
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   window.dp = new DayPilot.Scheduler("scheduler");
+  
   
   dp.scale = "Day";
   dp.cellWidthSpec = 40;
