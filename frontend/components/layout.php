@@ -3,6 +3,11 @@
   <ul>
     <li><a href="menu.php">Inicio</a></li>
     <li><a href="calendario.php">Calendario</a></li>
+    
+    <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin'): ?>
+    <li><a href="admin_solicitudes.php">Solicitudes empleados</a></li>
+    <?php endif; ?>
+
 
     <li class="dropdown">
       <button class="dropdown-btn" type="button">Solicitudes ▾</button>
@@ -14,6 +19,7 @@
     </li>
 
     <li><a href="perfil.php">Mi perfil</a></li>
+    <li><a href="logout.php">Cerrar sesión</a></li>
   </ul>
 </aside>
 

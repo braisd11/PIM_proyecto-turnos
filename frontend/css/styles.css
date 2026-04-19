@@ -486,3 +486,291 @@ aside a:hover {
 .dropdown-links a:hover {
   text-decoration: underline;
 }
+
+/* =========================
+   TABLA DE SOLICITUDES
+========================= */
+.requests-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 18px;
+  font-size: 14px;
+  background: white;
+  border: 1px solid #dfe5eb;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.requests-table th,
+.requests-table td {
+  border-bottom: 1px solid #e5e9ef;
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: middle;
+  line-height: 1.45;
+}
+
+.requests-table th {
+  background: #eef3f7;
+  color: #243447;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.requests-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.requests-table tbody tr:nth-child(even) {
+  background: #fbfcfd;
+}
+
+.requests-table tbody tr:hover {
+  background: #f2f7fb;
+}
+
+.requests-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.requests-table th:nth-child(1),
+.requests-table td:nth-child(1) {
+  width: 9%;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.requests-table th:nth-child(2),
+.requests-table td:nth-child(2) {
+  width: 11%;
+  text-align: center;
+}
+
+.requests-table th:nth-child(3),
+.requests-table td:nth-child(3) {
+  width: 12%;
+  white-space: nowrap;
+}
+
+.requests-table th:nth-child(4),
+.requests-table td:nth-child(4) {
+  width: 15%;
+  white-space: nowrap;
+}
+
+.requests-table th:nth-child(5),
+.requests-table td:nth-child(5) {
+  width: 11%;
+  text-align: left;
+}
+
+.requests-table th:nth-child(6),
+.requests-table td:nth-child(6) {
+  width: 21%;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.requests-table th:nth-child(7),
+.requests-table td:nth-child(7) {
+  width: 21%;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 86px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.status-pendiente {
+  background: #fff4d6;
+  color: #8a5a00;
+  border: 1px solid #f2d184;
+}
+
+.status-aprobada {
+  background: #dff3e6;
+  color: #17633a;
+  border: 1px solid #a9d9ba;
+}
+
+.status-rechazada {
+  background: #fde2e5;
+  color: #9a2530;
+  border: 1px solid #efb2b8;
+}
+
+.shift-change {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shift-change-row {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  column-gap: 8px;
+  row-gap: 2px;
+  align-items: center;
+}
+
+.shift-change-row span {
+  color: #5f6f82;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.shift-change-row strong {
+  color: #1f2933;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.shift-change-row em {
+  grid-column: 2;
+  color: #34495e;
+  font-size: 13px;
+  font-style: normal;
+  text-transform: capitalize;
+}
+
+@media (max-width: 900px) {
+  .requests-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+/* =========================
+   ADMIN SOLICITUDES
+========================= */
+.admin-requests-table th:nth-child(1),
+.admin-requests-table td:nth-child(1) {
+  width: 13%;
+}
+
+.admin-requests-table th:nth-child(2),
+.admin-requests-table td:nth-child(2) {
+  width: 10%;
+  text-transform: capitalize;
+}
+
+.admin-requests-table th:nth-child(3),
+.admin-requests-table td:nth-child(3) {
+  width: 11%;
+  text-align: center;
+}
+
+.admin-requests-table th:nth-child(4),
+.admin-requests-table td:nth-child(4) {
+  width: 11%;
+  white-space: nowrap;
+}
+
+.admin-requests-table th:nth-child(5),
+.admin-requests-table td:nth-child(5) {
+  width: 18%;
+}
+
+.admin-requests-table th:nth-child(6),
+.admin-requests-table td:nth-child(6) {
+  width: 16%;
+  vertical-align: top;
+}
+
+.admin-requests-table th:nth-child(7),
+.admin-requests-table td:nth-child(7) {
+  width: 16%;
+  vertical-align: top;
+}
+
+.admin-requests-table th:nth-child(8),
+.admin-requests-table td:nth-child(8) {
+  width: 19%;
+  vertical-align: top;
+}
+
+.request-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.request-detail div {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.request-detail span {
+  color: #5f6f82;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.request-detail strong {
+  color: #1f2933;
+  font-size: 13px;
+}
+
+.admin-action-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 180px;
+}
+
+.admin-action-form textarea {
+  width: 100%;
+  min-height: 58px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.admin-action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-action-buttons .primary {
+  width: auto;
+  max-width: none;
+  margin-top: 0;
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.approve-btn {
+  background: #2e7d32;
+}
+
+.approve-btn:hover {
+  background: #256428;
+}
+
+.reject-btn {
+  background: #c62828;
+}
+
+.reject-btn:hover {
+  background: #9f2020;
+}
+

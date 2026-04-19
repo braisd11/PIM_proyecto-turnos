@@ -2,13 +2,16 @@
 <?php include '../components/layout.php'; ?>
 
 <?php
-$nombre = $_SESSION['perfil_nombre'] ?? 'Empleado Demo';
-$email = $_SESSION['perfil_email'] ?? 'empleado@empresa.com';
-$telefono = $_SESSION['perfil_telefono'] ?? '600123456';
-$foto = $_SESSION['perfil_foto'] ?? '';
+require_once '../../backend/config/db.php';
+
+$db = getDB();
+
+$idEmpleado = $_SESSION['id_empleado'];
+
 $mensaje = '';
 $error = '';
 
+// Si el usuario pulsa "Guardar cambios", actualizamos la base de datos
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $nombre = trim($_POST['nombre'] ?? '');
   $email = trim($_POST['email'] ?? '');
@@ -17,39 +20,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($nombre === '' || $email === '' || $telefono === '') {
     $error = 'Por favor completa todos los campos.';
   } else {
-    $_SESSION['perfil_nombre'] = $nombre;
-    $_SESSION['perfil_email'] = $email;
-    $_SESSION['perfil_telefono'] = $telefono;
+    $stmt = $db->prepare("
+      UPDATE EMPLEADO
+      SET nombre = :nombre,
+          email = :email,
+          telefono = :telefono
+      WHERE id_empleado = :id_empleado
+    ");
+
+    $stmt->execute([
+      ':nombre' => $nombre,
+      ':email' => $email,
+      ':telefono' => $telefono,
+      ':id_empleado' => $idEmpleado
+    ]);
+
     $mensaje = 'Datos actualizados correctamente.';
-  }
-
-  if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-    $validTypes = ['jpg', 'jpeg', 'png', 'gif'];
-    $info = pathinfo($_FILES['foto']['name']);
-    $ext = strtolower($info['extension'] ?? '');
-
-    if (!in_array($ext, $validTypes, true)) {
-      $error = 'Solo se permiten imágenes JPG, PNG o GIF.';
-    } else {
-      $uploadDir = __DIR__ . '/uploads/';
-      $newName = 'perfil_' . uniqid() . '.' . $ext;
-      $uploadPath = $uploadDir . $newName;
-
-      if (move_uploaded_file($_FILES['foto']['tmp_name'], $uploadPath)) {
-        $_SESSION['perfil_foto'] = $newName;
-        $foto = $newName;
-        if ($mensaje === '') {
-          $mensaje = 'Foto de perfil subida correctamente.';
-        }
-      } else {
-        $error = 'Error al subir la imagen. Intenta de nuevo.';
-      }
-    }
   }
 }
 
-$fotoUrl = $foto ? 'uploads/' . htmlspecialchars($foto) : '';
+// Después cargamos los datos actuales desde la base de datos
+$stmt = $db->prepare("
+  SELECT nombre, email, telefono
+  FROM EMPLEADO
+  WHERE id_empleado = :id_empleado
+");
+
+$stmt->execute([
+  ':id_empleado' => $idEmpleado
+]);
+
+$empleado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$nombre = $empleado['nombre'] ?? '';
+$email = $empleado['email'] ?? '';
+$telefono = $empleado['telefono'] ?? '';
+$fotoUrl = '';
 ?>
+
 
 <main>
   <div class="card profile-card">

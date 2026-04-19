@@ -15,9 +15,21 @@ CREATE TABLE IF NOT EXISTS SOLICITUD (
     motivo TEXT,
     estado TEXT NOT NULL,
     fecha_solicitud TEXT NOT NULL,
+
+    fecha_inicio TEXT,
+    fecha_fin TEXT,
+
+    fecha_turno_actual TEXT,
+    turno_actual TEXT,
+    fecha_turno_nuevo TEXT,
+    turno_nuevo TEXT,
+
+    respuesta_admin TEXT,
+
     id_empleado INTEGER NOT NULL,
     FOREIGN KEY (id_empleado) REFERENCES EMPLEADO(id_empleado)
 );
+
 
 CREATE TABLE IF NOT EXISTS VACACION (
     id_vacacion INTEGER PRIMARY KEY AUTOINCREMENT,

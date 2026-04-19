@@ -1,8 +1,10 @@
-<!-- ================= login.php ================= -->
-<?php include '../components/header.php'; ?>
-
-
 <?php
+session_start();
+
+if (isset($_SESSION['usuario'])) {
+  header("Location: menu.php");
+  exit;
+}
 
 require_once '../../backend/config/db.php';
 
@@ -35,6 +37,18 @@ if ($user && password_verify($password, $user['contrasena'])) {
   }
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Login - App Turnos</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body>
+  <div class="container">
 
 <main>
   <div class="card center">
