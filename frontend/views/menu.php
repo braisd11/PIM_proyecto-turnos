@@ -1,5 +1,4 @@
 <!-- ================= Menu ================= -->
-<?php include 'layout.php'; ?>
 
 <?php
 $nombre = $_SESSION['perfil_nombre'] ?? 'Empleado Demo';
@@ -9,6 +8,9 @@ $foto = $_SESSION['perfil_foto'] ?? '';
 $fotoUrl = $foto ? 'uploads/' . htmlspecialchars($foto) : '';
 $inicial = strtoupper(substr(trim($nombre), 0, 1));
 ?>
+
+<?php include '../components/header.php'; ?>
+<?php include '../components/layout.php'; ?>
 
 <main>
   <div class="dashboard">
@@ -61,3 +63,5 @@ $inicial = strtoupper(substr(trim($nombre), 0, 1));
 
   </div>
 </main>
+
+<?php include '../components/footer.php'; ?>

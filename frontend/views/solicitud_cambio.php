@@ -1,5 +1,6 @@
 <!-- ================= Menu ================= -->
-<?php include 'layout.php'; ?>
+<?php include '../components/header.php'; ?>
+<?php include '../components/layout.php'; ?>
 
 <!-- ================= solicitudes.php ================= -->
 
@@ -35,11 +36,12 @@
       </div>
       <div class="form-group">
         <label for="observaciones_turno">Observaciones</label>
-        <textarea id="observaciones_turno" name="observaciones_turno" placeholder="Explica aquí tu solicitud..."></textarea>
+        <textarea id="observaciones_turno" name="observaciones_turno"
+          placeholder="Explica aquí tu solicitud..."></textarea>
       </div>
       <button class="primary">Enviar cambio de turno</button>
     </section>
   </div>
 </main>
 
-</div>
+<?php include '../components/footer.php'; ?>

@@ -1,6 +1,7 @@
 
 <!-- ================= Menu ================= -->
-<?php include 'layout.php'; ?>
+<?php include '../components/header.php'; ?>
+<?php include '../components/layout.php'; ?>
 
 <!-- ================= solicitudes.php ================= -->
 
@@ -26,4 +27,4 @@
   </div>
 </main>
 
-</div>
+<?php include '../components/footer.php'; ?>

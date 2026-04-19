@@ -1,0 +1,11 @@
+nombre;email;dni;telefono;usuario;contrasena;rol
+Juan Pérez;juan@test.com;12345678A;600111111;jperez;1234;empleado
+Ana López;ana@test.com;23456789B;600222222;alopez;1234;empleado
+Carlos García;carlos@test.com;34567890C;600333333;cgarcia;1234;empleado
+Laura Sánchez;laura@test.com;45678901D;600444444;lsanchez;1234;empleado
+Pedro Martín;pedro@test.com;56789012E;600555555;pmartin;1234;admin
+Marta Ruiz;marta@test.com;56789012F;600666666;mruiz;1234;empleado
+Luis Fernández;luis@test.com;67890123G;600777777;lfernandez;1234;empleado
+Sofía Gómez;sofia@test.com;78901234H;600888888;sgomez;1234;empleado
+David Torres;david@test.com;89012345I;600999999;dtorrres;1234;empleado
+Elena Castro;elena@test.com;90123456J;600101010;ecastro;1234;empleado

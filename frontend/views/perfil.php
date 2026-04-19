@@ -1,4 +1,5 @@
-<?php include 'layout.php'; ?>
+<?php include '../components/header.php'; ?>
+<?php include '../components/layout.php'; ?>
 
 <?php
 $nombre = $_SESSION['perfil_nombre'] ?? 'Empleado Demo';
@@ -94,6 +95,4 @@ $fotoUrl = $foto ? 'uploads/' . htmlspecialchars($foto) : '';
   </div>
 </main>
 
-</div>
-</body>
-</html>
+<?php include '../components/footer.php'; ?>

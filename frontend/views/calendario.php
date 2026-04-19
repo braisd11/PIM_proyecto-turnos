@@ -1,53 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
+<?php include '../components/header.php'; ?>
+<?php include '../components/layout.php'; ?>
 
-<head>
-  <meta charset="UTF-8">
-  <title>Calendario</title>
+<main>
+  <script src="../js-daypilot/daypilot-all.min.js"></script>
+  <div class="card">
+    <h2>Calendario de turnos</h2>
+    <div class="toolbar">
+      <button id="previous" class="nav-btn">⬅️</button>
+      <button id="today" class="nav-btn today-btn">Hoy</button>
+      <button id="next" class="nav-btn">➡️</button>
 
-  <link rel="stylesheet" href="./css/styles.css">
-  <script src="./js-daypilot/daypilot-all.min.js"></script>
-</head>
-
-<body>
-
-  <div class="container">
-
-    <?php include 'layout.php'; ?>
-
-    <main>
-      <div class="card">
-        <h2>Calendario de turnos</h2>
-        <div class="toolbar">
-          <button id="previous" class="nav-btn">⬅️</button>
-          <button id="today" class="nav-btn today-btn">Hoy</button>
-          <button id="next" class="nav-btn">➡️</button>
-
-          <!-- NUEVO -->
-          <div class="zoom-control">
-            <span>Zoom:</span>
-            <input type="range" id="cellWidth" min="20" max="100" value="40" />
-            <span id="cellWidthLabel">40</span>
-          </div>
-        </div>
-        <div class="calendar-container">
-          <!-- Scheduler -->
-          <div id="scheduler"></div>
-          <!-- Navigator -->
-          <div id="nav"></div>
-        </div>
-
-        <script src="js/dateUtils.js"></script>
-        <script src="js/calendar.js"></script>
-        <script src="js/main.js"></script>
-        <script src="js/navigation.js"></script>
-
+      <!-- NUEVO -->
+      <div class="zoom-control">
+        <span>Zoom:</span>
+        <input type="range" id="cellWidth" min="20" max="100" value="40" />
+        <span id="cellWidthLabel">40</span>
       </div>
-    </main>
+    </div>
+    <div class="calendar-container">
+      <!-- Scheduler -->
+      <div id="scheduler"></div>
+      <!-- Navigator -->
+      <div id="nav"></div>
+    </div>
+
+    <script src="../js/dateUtils.js"></script>
+    <script src="../js/calendar.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/navigation.js"></script>
 
   </div>
+</main>
 
-  <!-- <script>
+<?php include '../components/footer.php'; ?>
+
+<!-- <script>
     const dp = new DayPilot.Scheduler("scheduler");
 
     dp.startDate = DayPilot.Date.today();
