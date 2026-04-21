@@ -12,7 +12,7 @@
     <li class="dropdown">
       <button class="dropdown-btn" type="button">Solicitudes ▾</button>
       <div class="dropdown-links">
-        <a href="solicitud_cambio.php">Solicitud de cambio</a>
+        <a href="solicitud_cambio.php">Solicitud de cambio de turno</a>
         <a href="solicitud_vacaciones.php">Solicitud de vacaciones</a>
         <a href="mis_solicitudes.php">Mis solicitudes</a>
       </div>
