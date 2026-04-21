@@ -2,127 +2,375 @@
 
 ## Introducción
 
-Este manual está dirigido a administradores del Sistema de Gestión de Turnos. El sistema permite gestionar empleados, turnos, solicitudes y configuraciones del sistema. **Nota importante:** La funcionalidad de administración está parcialmente implementada. Este manual describe las características actuales y sugiere ampliaciones futuras para completar el sistema.
+Este manual está dirigido a los administradores del Sistema de Gestión de Turnos. La aplicación permite iniciar sesión con usuarios registrados, consultar datos personales, solicitar vacaciones o cambios de turno, y gestionar las solicitudes enviadas por los empleados.
+
+El rol de administrador dispone de permisos adicionales para revisar todas las solicitudes registradas en el sistema y aprobarlas o rechazarlas desde la propia aplicación.
 
 ## Requisitos del Sistema
 
-- Navegador web moderno
-- Credenciales de administrador
-- Conocimientos básicos de gestión de personal y horarios
+- Servidor local XAMPP con Apache activo.
+- Navegador web moderno: Chrome, Firefox, Edge o similar.
+- Proyecto ubicado dentro de la carpeta `htdocs` de XAMPP.
+- Base de datos SQLite incluida en `database/database.db`.
+- Credenciales de un usuario con rol `admin`.
+
+## Acceso a la Aplicación
+
+Para abrir la aplicación en local, inicie Apache desde XAMPP y acceda a:
+
+```text
+http://localhost/PIM_proyecto-turnos/frontend/views/login.php
+```
+
+También existe una pantalla específica para acceso de administración:
+
+```text
+http://localhost/PIM_proyecto-turnos/frontend/views/admin.php
+```
+
+Ambas pantallas validan las credenciales contra la tabla `EMPLEADO` de la base de datos SQLite.
 
 ## Inicio de Sesión como Administrador
 
-1. Navegue a la página de login de administrador (admin.php).
-2. Ingrese usuario "admin" y contraseña "1234".
-3. Seleccione el rol "admin".
-4. Haga clic en "Entrar".
+1. Abra la página de login.
+2. Introduzca las credenciales de un usuario con rol `admin`.
+3. Pulse el botón `Entrar`.
+4. Si las credenciales son correctas, accederá al menú principal.
 
-**Nota:** Actualmente, el sistema usa credenciales hardcodeadas. En futuras versiones, se implementará un sistema de autenticación más robusto con base de datos.
+Actualmente, la base de datos incluye un usuario administrador:
 
-## Funcionalidades Actuales
+```text
+Usuario: pmartin
+Contraseña: 1234
+Rol: admin
+```
 
-### Dashboard Administrativo
+Las contraseñas se validan mediante `password_verify()`, por lo que se comparan contra el hash almacenado en la base de datos.
 
-Después del login, accederá al menú principal con las mismas opciones que los empleados, pero con permisos adicionales. Actualmente, no hay diferenciación visual clara entre roles de empleado y administrador.
+## Roles del Sistema
 
-### Gestión de Calendario
+La aplicación distingue entre dos roles principales:
 
-Como administrador, puede:
-- Ver el calendario completo de todos los empleados.
-- Los turnos se muestran con empleados fijos (Juan, Carla, Luis).
-- Funcionalidades del calendario:
-  - Agregar turnos: Haga clic en un espacio vacío para crear un nuevo turno.
-  - Eliminar turnos: Use el menú contextual (clic derecho) sobre un turno.
-  - Cambiar colores: Opción en el menú contextual.
+- `empleado`: puede editar su perfil, crear solicitudes y consultar sus propias solicitudes.
+- `admin`: puede realizar las mismas acciones que un empleado y, además, revisar todas las solicitudes del sistema.
 
-**Limitación actual:** Los empleados están hardcodeados en el código JavaScript. No se pueden agregar/eliminar empleados dinámicamente.
+El rol se guarda en sesión tras el login:
 
-### Revisión de Solicitudes
+```php
+$_SESSION['rol']
+```
 
-Actualmente, las solicitudes de empleados (cambios de turno, vacaciones) se envían pero no hay interfaz para que el administrador las revise y apruebe/rechace.
+Las páginas administrativas comprueban este rol antes de permitir el acceso.
 
-**Estado:** Funcionalidad pendiente de implementación.
+## Menú Principal
 
-## Funcionalidades Pendientes de Implementación
+Después de iniciar sesión, el usuario accede a la pantalla principal.
 
-Para completar el sistema de administración, se requieren las siguientes ampliaciones:
+El menú lateral incluye:
 
-### 1. Gestión de Usuarios
-- Crear, editar y eliminar cuentas de empleados.
-- Asignar roles (empleado, administrador).
-- Gestionar permisos de acceso.
-- Integración con base de datos para almacenamiento persistente.
+- Inicio.
+- Calendario.
+- Solicitudes empleados, visible para usuarios con rol `admin`.
+- Solicitud de cambio.
+- Solicitud de vacaciones.
+- Mis solicitudes.
+- Mi perfil.
+- Cerrar sesión.
 
-### 2. Gestión de Turnos
-- Asignación automática de turnos.
-- Plantillas de horarios recurrentes.
-- Intercambio de turnos entre empleados.
-- Notificaciones automáticas.
+El panel de inicio muestra información real del usuario logeado, obtenida desde la tabla `EMPLEADO`:
 
-### 3. Sistema de Solicitudes
-- Panel para revisar solicitudes pendientes.
-- Aprobar/rechazar solicitudes con comentarios.
-- Historial de solicitudes.
-- Notificaciones a empleados sobre decisiones.
+- Nombre.
+- Email.
+- Teléfono.
+- Usuario.
+- Rol.
 
-### 4. Reportes y Estadísticas
-- Reportes de horas trabajadas.
-- Estadísticas de solicitudes.
-- Exportación de datos (PDF, Excel).
-- Dashboard con métricas clave.
+## Gestión del Perfil
 
-### 5. Configuración del Sistema
-- Configuración de turnos disponibles (mañana, tarde, noche).
-- Días festivos y excepciones.
-- Reglas de negocio (máximo de turnos consecutivos, etc.).
-- Backup y restauración de datos.
+Desde `Mi perfil`, el usuario puede modificar:
 
-### 6. Seguridad y Auditoría
-- Logs de actividades.
-- Autenticación de dos factores.
-- Encriptación de datos sensibles.
-- Cumplimiento con normativas de privacidad (RGPD, etc.).
+- Nombre.
+- Email.
+- Teléfono.
+
+Al pulsar `Guardar cambios`, la aplicación actualiza directamente la tabla `EMPLEADO` de la base de datos.
+
+La actualización se realiza usando el identificador del usuario guardado en sesión:
+
+```php
+$_SESSION['id_empleado']
+```
+
+Esto evita que un usuario pueda modificar datos de otro empleado desde el formulario.
+
+## Solicitudes de Vacaciones
+
+Los empleados y administradores pueden registrar solicitudes de vacaciones desde:
+
+```text
+Solicitudes > Solicitud de vacaciones
+```
+
+El formulario solicita:
+
+- Fecha de inicio.
+- Fecha de fin.
+- Observaciones.
+
+Al enviar la solicitud, se crea un registro en la tabla `SOLICITUD` con:
+
+- `tipo`: `vacaciones`.
+- `estado`: `pendiente`.
+- `fecha_solicitud`: fecha actual.
+- `fecha_inicio`: fecha inicial solicitada.
+- `fecha_fin`: fecha final solicitada.
+- `motivo`: observaciones del usuario.
+- `id_empleado`: empleado logeado.
+
+La aplicación valida que ambas fechas estén informadas y que la fecha de inicio no sea posterior a la fecha de fin.
+
+## Solicitudes de Cambio de Turno
+
+Los empleados y administradores pueden registrar solicitudes de cambio de turno desde:
+
+```text
+Solicitudes > Solicitud de cambio
+```
+
+El formulario solicita:
+
+- Día del turno actual.
+- Turno actual: mañana, tarde o noche.
+- Nuevo día deseado.
+- Turno deseado: mañana, tarde o noche.
+- Observaciones.
+
+Al enviar la solicitud, se crea un registro en la tabla `SOLICITUD` con:
+
+- `tipo`: `cambio_turno`.
+- `estado`: `pendiente`.
+- `fecha_solicitud`: fecha actual.
+- `fecha_turno_actual`.
+- `turno_actual`.
+- `fecha_turno_nuevo`.
+- `turno_nuevo`.
+- `motivo`: observaciones del usuario.
+- `id_empleado`: empleado logeado.
+
+La aplicación valida que el turno nuevo no sea exactamente igual al turno actual.
+
+## Mis Solicitudes
+
+La pantalla `Mis solicitudes` permite a cada usuario consultar únicamente sus propias solicitudes.
+
+La consulta se filtra mediante:
+
+```sql
+WHERE id_empleado = :id_empleado
+```
+
+Cada solicitud muestra:
+
+- Tipo.
+- Estado.
+- Fecha de solicitud.
+- Fechas de vacaciones, si corresponde.
+- Datos del cambio de turno, si corresponde.
+- Motivo.
+- Respuesta del administrador.
+
+Los estados disponibles son:
+
+- `pendiente`: solicitud creada, pendiente de revisión.
+- `aprobada`: solicitud aprobada por un administrador.
+- `rechazada`: solicitud rechazada por un administrador.
+
+## Revisión de Solicitudes por el Administrador
+
+Los usuarios con rol `admin` tienen acceso a:
+
+```text
+Solicitudes empleados
+```
+
+Esta pantalla muestra todas las solicitudes registradas por todos los empleados.
+
+Para cada solicitud se muestra:
+
+- Empleado.
+- Usuario.
+- Tipo de solicitud.
+- Estado.
+- Fecha de solicitud.
+- Detalle de vacaciones o cambio de turno.
+- Motivo.
+- Respuesta administrativa.
+- Acciones disponibles.
+
+Si la solicitud está en estado `pendiente`, el administrador puede:
+
+- Aprobar la solicitud.
+- Rechazar la solicitud.
+- Añadir una respuesta opcional.
+
+Al aprobar o rechazar, la aplicación actualiza:
+
+- `estado`.
+- `respuesta_admin`.
+
+El empleado podrá ver el nuevo estado y la respuesta desde su pantalla `Mis solicitudes`.
+
+## Cierre de Sesión
+
+La opción `Cerrar sesión` destruye la sesión actual y redirige al usuario a la pantalla de login.
+
+El cierre de sesión realiza las siguientes acciones:
+
+- Vacía `$_SESSION`.
+- Elimina la cookie de sesión.
+- Ejecuta `session_destroy()`.
+- Redirige a `login.php`.
 
 ## Base de Datos
 
-Actualmente, el sistema no utiliza una base de datos completa. Hay un archivo `init.sql` vacío y un script `temp.js` que crea una tabla básica de usuarios en SQLite.
+El sistema utiliza SQLite. La base de datos principal está en:
 
-**Recomendación:** Implementar una base de datos relacional (MySQL/PostgreSQL) con las siguientes tablas principales:
-- `usuarios` (id, nombre, email, rol, contraseña_hash, fecha_creacion)
-- `turnos` (id, empleado_id, fecha, tipo_turno, estado)
-- `solicitudes` (id, empleado_id, tipo, fecha_solicitud, detalles, estado, admin_id, fecha_respuesta)
+```text
+database/database.db
+```
 
-## API Backend
+El esquema de creación se documenta en:
 
-El archivo `backend/index.php` está vacío. Se requiere implementar una API REST para:
-- Autenticación de usuarios.
-- CRUD de empleados y turnos.
-- Gestión de solicitudes.
-- Integración con el frontend.
+```text
+database/init.sql
+```
 
-## Recomendaciones para Desarrollo Futuro
+### Tabla `EMPLEADO`
 
-1. **Separación de Roles:** Implementar middleware para diferenciar claramente entre empleados y administradores.
-2. **Validaciones:** Agregar validaciones del lado servidor para todos los formularios.
-3. **UI/UX:** Mejorar la interfaz de administración con componentes específicos (tablas de datos, modales de confirmación).
-4. **Testing:** Implementar pruebas unitarias y de integración.
-5. **Documentación Técnica:** Crear documentación para desarrolladores.
-6. **Despliegue:** Configurar entorno de producción con servidor web, base de datos y backups.
+Almacena los usuarios del sistema:
+
+- `id_empleado`.
+- `nombre`.
+- `email`.
+- `dni`.
+- `telefono`.
+- `usuario`.
+- `contrasena`.
+- `rol`.
+
+### Tabla `SOLICITUD`
+
+Almacena las solicitudes de vacaciones y cambios de turno:
+
+- `id_solicitud`.
+- `tipo`.
+- `motivo`.
+- `estado`.
+- `fecha_solicitud`.
+- `fecha_inicio`.
+- `fecha_fin`.
+- `fecha_turno_actual`.
+- `turno_actual`.
+- `fecha_turno_nuevo`.
+- `turno_nuevo`.
+- `respuesta_admin`.
+- `id_empleado`.
+
+### Otras Tablas
+
+El sistema también incluye:
+
+- `VACACION`.
+- `CUADRANTE`.
+- `TURNO`.
+
+Estas tablas forman parte del modelo de gestión de turnos y cuadrantes, aunque la integración principal actual se centra en empleados y solicitudes.
+
+## Calendario
+
+El calendario utiliza la librería DayPilot y permite visualizar una planificación de turnos.
+
+Funcionalidades actuales:
+
+- Visualización mensual.
+- Navegación entre meses.
+- Control de zoom.
+- Creación visual de eventos en el calendario.
+- Menú contextual para eliminar o modificar eventos visualmente.
+
+Limitación actual:
+
+- Los empleados y eventos del calendario no se cargan todavía dinámicamente desde la base de datos.
+
+## Seguridad y Validaciones
+
+El sistema incluye varias medidas básicas:
+
+- Validación de login contra base de datos.
+- Contraseñas verificadas mediante hash.
+- Uso de sesiones PHP.
+- Protección de páginas privadas.
+- Comprobación de rol `admin` en páginas administrativas.
+- Uso de consultas preparadas PDO para evitar inyección SQL.
+- Validación básica de formularios en servidor.
+
+## Funcionalidades Pendientes o Mejorables
+
+Aunque el sistema ya permite un flujo completo de solicitudes, quedan posibles mejoras:
+
+### Gestión de Usuarios
+
+- Crear empleados desde interfaz administrativa.
+- Editar empleados desde un panel admin.
+- Eliminar o desactivar usuarios.
+- Cambiar roles desde la aplicación.
+
+### Gestión Real de Turnos
+
+- Cargar empleados reales en el calendario.
+- Cargar turnos desde la tabla `TURNO`.
+- Actualizar turnos al aprobar solicitudes de cambio.
+- Validar que el empleado tenga realmente el turno que desea cambiar.
+
+### Solicitudes
+
+- Añadir fecha de resolución.
+- Guardar qué administrador resolvió cada solicitud.
+- Añadir filtros por estado, empleado o tipo.
+- Añadir buscador.
+
+### Auditoría y Seguridad
+
+- Registrar acciones administrativas.
+- Añadir confirmaciones antes de aprobar o rechazar.
+- Mejorar gestión de errores.
+- Añadir recuperación o cambio de contraseña.
+
+### Interfaz
+
+- Mejorar responsive en tablas grandes.
+- Añadir mensajes de confirmación más visibles.
+- Unificar estilos de todas las pantallas.
 
 ## Soporte y Mantenimiento
 
-- Mantenga backups regulares de la base de datos.
-- Monitoree logs de errores.
-- Actualice dependencias regularmente.
-- Realice pruebas antes de despliegues en producción.
+Recomendaciones:
 
-## Contacto
+- Mantener copias de seguridad de `database/database.db`.
+- No subir archivos temporales de migración o limpieza al repositorio.
+- Actualizar `init.sql` cuando cambie la estructura de la base de datos.
+- Probar los flujos principales antes de hacer push o entregar una versión.
+- Revisar que la base de datos no contenga datos de prueba inadecuados antes de compartirla.
 
-Para soporte técnico o consultas sobre ampliaciones:
-- Desarrollador del sistema
-- Equipo de TI de la empresa
+## Resumen del Flujo Administrativo
+
+1. El empleado crea una solicitud de vacaciones o cambio de turno.
+2. La solicitud queda guardada como `pendiente`.
+3. El administrador entra en `Solicitudes empleados`.
+4. El administrador revisa el detalle.
+5. El administrador aprueba o rechaza la solicitud.
+6. El empleado consulta el resultado en `Mis solicitudes`.
 
 ---
 
-*Este manual refleja el estado actual del sistema. Se actualizará conforme se implementen nuevas funcionalidades.*</content>
-<parameter name="filePath">c:\xampp\htdocs\proyecto-turnos\Manual_Administracion.md
+*Este manual refleja el estado actual del sistema tras la integración de perfiles, solicitudes y gestión administrativa con SQLite.*
