@@ -7,7 +7,7 @@ body {
 
 @media (max-width: 768px) {
   #scheduler {
-    height: 60vh;
+    height: 100vh;
   }
 
   .scheduler_default_event {
@@ -100,13 +100,15 @@ body {
   flex-direction: row;
   gap: 10px;
   /* espacio entre scheduler y navigator */
-  height: 70vh;
-  /* ajusta altura según necesites */
-  /* width: 100%; */
+  height: auto;
+  min-height: 60vh;
+  width: 100%;
 }
 
 #scheduler {
   flex: 1;
+  height: 100%;
+  min-height: 400px;
   /* ocupa todo el espacio disponible */
 }
 

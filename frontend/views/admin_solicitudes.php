@@ -6,7 +6,7 @@ require_once '../../backend/config/db.php';
 
 $db = getDB();
 
-if ($_SESSION['rol'] !== 'admin') {
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {
   header("Location: menu.php");
   exit;
 }
@@ -39,39 +39,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-$stmt = $db->prepare("
-  SELECT
-    s.id_solicitud,
-    s.tipo,
-    s.motivo,
-    s.estado,
-    s.fecha_solicitud,
-    s.fecha_inicio,
-    s.fecha_fin,
-    s.fecha_turno_actual,
-    s.turno_actual,
-    s.fecha_turno_nuevo,
-    s.turno_nuevo,
-    s.respuesta_admin,
-    e.nombre,
-    e.usuario,
-    e.email
-  FROM SOLICITUD s
-  INNER JOIN EMPLEADO e ON s.id_empleado = e.id_empleado
-  ORDER BY
-    CASE s.estado
-      WHEN 'pendiente' THEN 1
-      WHEN 'aprobada' THEN 2
-      WHEN 'rechazada' THEN 3
-      ELSE 4
-    END,
-    s.fecha_solicitud DESC,
-    s.id_solicitud DESC
-");
 
-$stmt->execute();
 
-$solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$solicitudes = [];
+try {
+  $stmt = $db->prepare(
+    "SELECT
+      s.id_solicitud,
+      s.tipo,
+      s.motivo,
+      s.estado,
+      s.fecha_solicitud,
+      s.fecha_inicio,
+      s.fecha_fin,
+      s.fecha_turno_actual,
+      s.turno_actual,
+      s.fecha_turno_nuevo,
+      s.turno_nuevo,
+      s.respuesta_admin,
+      e.nombre,
+      e.usuario,
+      e.email
+    FROM SOLICITUD s
+    INNER JOIN EMPLEADO e ON s.id_empleado = e.id_empleado
+    ORDER BY
+      CASE s.estado
+        WHEN 'pendiente' THEN 1
+        WHEN 'aprobada' THEN 2
+        WHEN 'rechazada' THEN 3
+        ELSE 4
+      END,
+      s.fecha_solicitud DESC,
+      s.id_solicitud DESC"
+  );
+
+  $stmt->execute();
+  $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+} catch (Exception $e) {
+  $solicitudes = [];
+  $error = 'No se pudieron cargar las solicitudes.';
+}
 
 function mostrarTipoSolicitud($tipo)
 {
@@ -93,20 +100,12 @@ function mostrarEstadoSolicitud($estado)
 
   return $estados[$estado] ?? $estado;
 }
+
 ?>
 
 <main>
-  <div class="card">
-    <h2>Solicitudes de empleados</h2>
-
-    <?php if ($mensaje): ?>
-      <p class="message"><?php echo htmlspecialchars($mensaje); ?></p>
-    <?php endif; ?>
-
-    <?php if ($error): ?>
-      <p class="error"><?php echo htmlspecialchars($error); ?></p>
-    <?php endif; ?>
-
+  <div class="card profile-card">
+    <h2>Solicitudes Empleados</h2>
     <?php if (count($solicitudes) === 0): ?>
       <p>No hay solicitudes registradas.</p>
     <?php else: ?>
@@ -182,7 +181,8 @@ function mostrarEstadoSolicitud($estado)
               <td>
                 <?php if ($solicitud['estado'] === 'pendiente'): ?>
                   <form method="POST" class="admin-action-form">
-                    <input type="hidden" name="id_solicitud" value="<?php echo htmlspecialchars($solicitud['id_solicitud']); ?>">
+                    <input type="hidden" name="id_solicitud"
+                      value="<?php echo htmlspecialchars($solicitud['id_solicitud']); ?>">
 
                     <textarea name="respuesta_admin" placeholder="Respuesta opcional"></textarea>
 

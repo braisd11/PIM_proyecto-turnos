@@ -6,32 +6,43 @@ require_once '../../backend/config/db.php';
 
 $db = getDB();
 
+if (!isset($_SESSION['id_empleado'])) {
+  header("Location: login.php");
+  exit;
+}
+
 $idEmpleado = $_SESSION['id_empleado'];
 
-$stmt = $db->prepare("
-  SELECT
-    id_solicitud,
-    tipo,
-    motivo,
-    estado,
-    fecha_solicitud,
-    fecha_inicio,
-    fecha_fin,
-    fecha_turno_actual,
-    turno_actual,
-    fecha_turno_nuevo,
-    turno_nuevo,
-    respuesta_admin
-  FROM SOLICITUD
-  WHERE id_empleado = :id_empleado
-  ORDER BY fecha_solicitud DESC, id_solicitud DESC
-");
+$solicitudes = [];
+try {
+  $stmt = $db->prepare("
+    SELECT
+      id_solicitud,
+      tipo,
+      motivo,
+      estado,
+      fecha_solicitud,
+      fecha_inicio,
+      fecha_fin,
+      fecha_turno_actual,
+      turno_actual,
+      fecha_turno_nuevo,
+      turno_nuevo,
+      respuesta_admin
+    FROM SOLICITUD
+    WHERE id_empleado = :id_empleado
+    ORDER BY fecha_solicitud DESC, id_solicitud DESC
+  " );
 
-$stmt->execute([
-  ':id_empleado' => $idEmpleado
-]);
+  $stmt->execute([
+    ':id_empleado' => $idEmpleado
+  ]);
 
-$solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+} catch (Exception $e) {
+  $solicitudes = [];
+  $error = 'No se pudieron cargar las solicitudes del usuario.';
+}
 
 function mostrarTipoSolicitud($tipo)
 {
