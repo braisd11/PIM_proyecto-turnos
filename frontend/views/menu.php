@@ -9,7 +9,7 @@ $db = getDB();
 $idEmpleado = $_SESSION['id_empleado'];
 
 $stmt = $db->prepare("
-  SELECT nombre, email, telefono, usuario, rol
+  SELECT nombre, email, telefono, usuario, rol, foto_base64
   FROM EMPLEADO
   WHERE id_empleado = :id_empleado
 ");
@@ -28,6 +28,7 @@ $rol = $empleado['rol'] ?? ($_SESSION['rol'] ?? '');
 $rolTexto = $rol === 'admin' ? 'Administrador' : 'Empleado';
 $nombreAvatar = $nombre !== '' ? $nombre : $usuario;
 $inicial = strtoupper(substr(trim($nombreAvatar), 0, 1));
+$fotoUrl = $empleado['foto_base64'] ?? '';
 ?>
 
 <main>
@@ -53,7 +54,11 @@ $inicial = strtoupper(substr(trim($nombreAvatar), 0, 1));
       </div>
 
       <div class="welcome-avatar">
-        <span class="avatar-placeholder"><?php echo htmlspecialchars($inicial); ?></span>
+        <?php if ($fotoUrl): ?>
+          <img src="<?php echo $fotoUrl; ?>" alt="Foto de perfil">
+        <?php else: ?>
+          <span class="avatar-placeholder"><?php echo htmlspecialchars($inicial); ?></span>
+        <?php endif; ?>
       </div>
     </div>
 

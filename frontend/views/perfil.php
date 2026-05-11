@@ -20,11 +20,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($nombre === '' || $email === '' || $telefono === '') {
     $error = 'Por favor completa todos los campos.';
   } else {
+    $fotoBase64 = null;
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+      $fileTmpPath = $_FILES['foto']['tmp_name'];
+      $fileData = file_get_contents($fileTmpPath);
+      $imageInfo = getimagesize($fileTmpPath);
+      $mimeType = $imageInfo['mime'] ?? 'image/jpeg';
+      $fotoBase64 = 'data:' . $mimeType . ';base64,' . base64_encode($fileData);
+    }
+
     $stmt = $db->prepare("
       UPDATE EMPLEADO
       SET nombre = :nombre,
           email = :email,
-          telefono = :telefono
+          telefono = :telefono,
+          foto_base64 = :foto_base64
       WHERE id_empleado = :id_empleado
     ");
 
@@ -32,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       ':nombre' => $nombre,
       ':email' => $email,
       ':telefono' => $telefono,
+      ':foto_base64' => $fotoBase64,
       ':id_empleado' => $idEmpleado
     ]);
 
@@ -41,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Después cargamos los datos actuales desde la base de datos
 $stmt = $db->prepare("
-  SELECT nombre, email, telefono
+  SELECT nombre, email, telefono, foto_base64
   FROM EMPLEADO
   WHERE id_empleado = :id_empleado
 ");
@@ -55,7 +66,7 @@ $empleado = $stmt->fetch(PDO::FETCH_ASSOC);
 $nombre = $empleado['nombre'] ?? '';
 $email = $empleado['email'] ?? '';
 $telefono = $empleado['telefono'] ?? '';
-$fotoUrl = '';
+$fotoUrl = $empleado['foto_base64'] ?? '';
 ?>
 
 

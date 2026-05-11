@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS EMPLEADO (
     telefono TEXT,
     usuario TEXT NOT NULL UNIQUE,
     contrasena TEXT NOT NULL,
-    rol TEXT NOT NULL
+    rol TEXT NOT NULL,
+    foto_base64 TEXT
 );
 
 CREATE TABLE IF NOT EXISTS SOLICITUD (
